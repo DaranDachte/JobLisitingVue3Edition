@@ -9,13 +9,14 @@
     </div>
     <ul>
       <div class="item" v-for="vacancy in vacancies">
-        {{ vacancy.companyName }} {{ vacancy.vacancyName }}
+        <Item :vacancy="vacancy" />
       </div>
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
+import Item from "./Item.vue";
 import photosnap from "../assets/img/photosnap.svg";
 import manage from "../assets/img/manage.svg";
 import eyecam from "../assets/img/eyecam.svg";
