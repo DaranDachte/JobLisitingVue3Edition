@@ -65,7 +65,7 @@
       </div>
     </div>
     <div className="flex items-center justify-end pl-10">
-      <div className="h-[2rem] w-[5rem]">
+      <div className="h-[2rem] flex w-[5rem]">
         <span
           @click="goToEdit"
           className="bg-[#2E8B57] hover:bg-[#20B2AA] text-white font-normal p-2 mx-1 rounded tracking-[-0.00769rem]  hover:cursor-pointer"
@@ -74,7 +74,7 @@
         </span>
         <span
           class="bg-[#2E8B57] hover:bg-[#20B2AA] text-white font-normal p-2 mx-1 rounded tracking-[-0.00769rem] hover:cursor-pointer"
-          @click="handleDeleteVacancy(vacancy.id)"
+          @click="store.deleteVacansy(vacancy.id)"
         >
           Delete
         </span>
@@ -84,8 +84,12 @@
 </template>
 
 <script setup lang="ts">
-import type { Vacancy } from "./Home.vue";
+import type { Vacancy } from "../stores/Vacansys";
+import { useVacansiesStore } from "../stores/Vacansys";
+
 import GreyRound from "../assets/img/GreyRound.svg";
+
+const store = useVacansiesStore();
 
 type VacancyObject = {
   vacancy: Vacancy;
