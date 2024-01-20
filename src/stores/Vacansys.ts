@@ -180,9 +180,28 @@ export const useVacansiesStore = defineStore("vacanies", () => {
         " Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus modi mollitia unde eaque voluptatibus nihil minima nisi facilis eveniet, numquam dolorem, nemo labore aliquid id doloribus voluptate corrupti non, hic consequuntur vero laboriosam? Assumenda, dolores necessitatibus! Esse quibusdam qui nam voluptas beatae magnam enim neque quis eos ut? Dicta laborum mollitia error nihil repellendus consectetur illum quaerat officiis laboriosam fugit velit eius hic, autem magnam explicabo reiciendis at. Similique porro sint eius modi dolores deserunt ipsa obcaecati voluptatibus animi quisquam quibusdam provident, ducimus nihil sit velit eligendi hic minima eum est voluptate, officiis magnam magni neque doloremque. Molestias voluptas animi at reiciendis velit dolorem quaerat odio nisi vitae reprehenderit, earum soluta possimus non tempore omnis impedit laudantium ratione quo laboriosam fuga! Sed excepturi quisquam doloremque aliquid, ipsam, fuga quibusdam laboriosam, explicabo consectetur obcaecati minus tenetur est eum officiis vel nostrum ipsa. Veniam praesentium pariatur dolorem architecto autem numquam, adipisci obcaecati eum laudantium sequi nisi qui iste excepturi reprehenderit error hic exercitationem alias nobis commodi ut asperiores voluptate nam possimus! Rem debitis veritatis, tempore nesciunt temporibus fugiat iste qui tenetur illo. Sapiente sunt repellendus sit deserunt quam culpa consequatur est, doloremque dignissimos, sequi cupiditate odit suscipit officiis voluptate itaque ipsam assumenda!",
     },
   ]);
-  const deleteVacansy = (id: string) => {
+  const deleteVacancy = (id: string) => {
     vacancies.value = vacancies.value.filter((el) => el.id !== id);
   };
 
-  return { vacancies, deleteVacansy };
+  const findVacancyById = (id: string) => {
+    return vacancies.value.filter((el) => el.id === id)[0];
+  };
+
+  const addNewVacancy = (vacancy: Vacancy) => {
+    vacancies.value.push(vacancy);
+  };
+
+  const updateVacancy = (vacancy: Vacancy) => {
+    const index = vacancies.value.findIndex((el) => el.id === vacancy.id);
+    vacancies.value[index] = vacancy;
+  };
+
+  return {
+    vacancies,
+    deleteVacancy,
+    findVacancyById,
+    addNewVacancy,
+    updateVacancy,
+  };
 });

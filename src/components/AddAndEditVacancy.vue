@@ -10,7 +10,7 @@
         {{ isExist(vacancyInfo) ? "Edit" : "Add" }} Vacancy:
       </h2>
     </header>
-    <Form @submit="onSubmit">
+    <form @submit="onSubmit">
       <label class="{labelClasses}" htmlFor="companyName">
         <span class="text-[2rem] text-[#008080]">Company Name:</span>
         <Field
@@ -69,29 +69,44 @@
       </label>
       <label class="{labelClasses}" htmlFor="description">
         <span class="text-[2rem] text-[#008080]"> Description: </span>
-        <textarea
+        <Field
           class="outline-none rounded"
           name="description"
           rows="{15}"
           cols="{100}"
           v-model="vacancyInfo.description"
-        ></textarea>
+        ></Field>
       </label>
 
-      <button
-        class="bg-[#2E8B57] hover:bg-[#20B2AA] text-white font-bold py-2 px-4 rounded"
-      >
-        Send Vacancy
-      </button>
-    </Form>
+      <RouterLink to="/">
+        <button
+          type="submit"
+          class="bg-[#2E8B57] hover:bg-[#20B2AA] text-white font-bold py-2 px-4 rounded"
+        >
+          Send Vacancy
+        </button>
+      </RouterLink>
+    </form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Form, Field, ErrorMessage, useForm } from "vee-validate";
+import { useRoute, useRouter } from "vue-router";
+import { Field, useForm } from "vee-validate";
+import { object, string } from "yup";
+import { toTypedSchema } from "@vee-validate/yup";
 import { isExist } from "../Helpers/isExist";
 import { v4 as uuidv4 } from "uuid";
-const vacancyInfo = {
+import { useVacansiesStore } from "../stores/Vacansys";
+const store = useVacansiesStore();
+
+const router = useRouter();
+
+const route = useRoute();
+
+const vacancyId: string | undefined = route.params.id;
+
+const defaultvacancyData = {
   id: uuidv4(),
   companyName: "",
   vacancyName: "",
@@ -103,18 +118,31 @@ const vacancyInfo = {
   tags: [],
   description: "",
 };
-const schema = {
-  companyName: "required|min:3|max:100|alpha_spaces",
-  vacancyName: "required|min:3|max:100|alpha_spaces",
-  publishingDate: "required|min_value:3|max_value:50",
-  employmentType: "required|min:3|max:100|alpha_spaces",
-  location: "required|min:3|max:100|alpha_spaces",
-  description: "required|min:3|max:100",
-};
 
-const { handleSubmit } = useForm({ validationSchema: schema });
+const vacancyInfo = vacancyId
+  ? store.findVacancyById(vacancyId)
+  : defaultvacancyData;
+
+console.log(vacancyInfo);
+
+const { values, handleSubmit } = useForm({
+  validationSchema: toTypedSchema(
+    object({
+      companyName: string().required(),
+      vacancyName: string().required(),
+      name: string(),
+      location: string().required(),
+      description: string().required(),
+      labels: string().required(),
+      tags: string().required(),
+    })
+  ),
+});
+console.log(values);
 
 const onSubmit = handleSubmit((values) => {
   console.log(JSON.stringify(values, null, 2));
 });
+
+console.log(onSubmit);
 </script>

@@ -66,15 +66,15 @@
     </div>
     <div className="flex items-center justify-end pl-10">
       <div className="h-[2rem] flex w-[5rem]">
-        <span
-          @click="goToEdit"
+        <RouterLink
+          :to="`/details/${vacancy.id}/edit`"
           className="bg-[#2E8B57] hover:bg-[#20B2AA] text-white font-normal p-2 mx-1 rounded tracking-[-0.00769rem]  hover:cursor-pointer"
         >
           Edit
-        </span>
+        </RouterLink>
         <span
           class="bg-[#2E8B57] hover:bg-[#20B2AA] text-white font-normal p-2 mx-1 rounded tracking-[-0.00769rem] hover:cursor-pointer"
-          @click="store.deleteVacansy(vacancy.id)"
+          @click="store.deleteVacancy(vacancy.id)"
         >
           Delete
         </span>
@@ -97,8 +97,6 @@ type VacancyObject = {
 
 const { vacancy } = defineProps<VacancyObject>();
 
-console.log(vacancy);
-
 type colorMapT = {
   [k: string]: string;
 };
@@ -106,12 +104,5 @@ type colorMapT = {
 const colorMap: colorMapT = {
   "NEW!": "bg-[#5CA5A5]",
   FEATURED: "bg-[#2B3939]",
-};
-
-const goToEdit = () => {
-  return `/details/${vacancy.id}/edit`;
-};
-const handleDeleteVacancy = (id: string) => {
-  return id;
 };
 </script>
