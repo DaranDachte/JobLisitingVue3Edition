@@ -7,92 +7,98 @@
     </div>
     <header>
       <h2 class="text-[3rem] bold text-[#008080] pb-3">
-        {{ isExist(vacancyInfo) ? "Edit" : "Add" }} Vacancy:
+        <span v-if="isExist(vacancyId)"> Edit Vacancy:</span>
+        <span v-else>Add Vacancy:</span>
       </h2>
     </header>
-    <form @submit="onSubmit">
+
+    <form class="flex flex-col" @submit="onSubmit">
       <label class="{labelClasses}" htmlFor="companyName">
         <span class="text-[2rem] text-[#008080]">Company Name:</span>
         <Field
-          class="{FieldClasses}"
+          class="mx-[2rem] outline-none rounded"
           type="text"
           v-model="vacancyInfo.companyName"
           name="companyName"
         />
+        <ErrorMessage class="text-red-600" name="companyName" />
       </label>
       <label class="{labelClasses}" htmlFor="vacancyName">
         <span class="text-[2rem] text-[#008080]">Vacancy Name: </span>
         <Field
-          class="{FieldClasses}"
+          class="mx-[2rem] outline-none rounded"
           type="text"
           v-model="vacancyInfo.vacancyName"
           name="vacancyName"
         />
+        <ErrorMessage class="text-red-600" name="vacancyName" />
       </label>
       <label class="{labelClasses}" htmlFor="employmentType">
-        <span class="text-[2rem] text-[#008080]">Employment Type: </span>
+        <span class="text-[2rem] text-[#008080]">Employment Type:</span>
         <Field
-          class="{FieldClasses}"
+          class="mx-[2rem] outline-none rounded"
           type="text"
           name="employmentType"
           v-model="vacancyInfo.employmentType"
         />
+        <ErrorMessage class="text-red-600" name="employmentType" />
       </label>
       <label class="{labelClasses}" htmlFor="location">
         <span class="text-[2rem] text-[#008080]">Location: </span>
         <Field
-          class="{FieldClasses}"
+          class="mx-[2rem] outline-none rounded"
           type="text"
           name="location"
           v-model="vacancyInfo.location"
         />
+        <ErrorMessage class="text-red-600" name="location" />
       </label>
-      <label class="{labelClasses}" htmlFor="tags">
+      <label htmlFor="tags">
         <span class="text-[2rem] text-[#008080]">Tags: </span>
         <Field
-          class="{FieldClasses}"
+          class="mx-[2rem] outline-none rounded"
           type="text"
           name="tags"
           placeholder="tag1, tag2, tag3..."
           v-model="vacancyInfo.tags"
         />
+        <ErrorMessage class="text-red-600" name="tags" />
       </label>
       <label class="{labelClasses}" htmlFor="labels">
         <span class="text-[2rem] text-[#008080]">Labels: </span>
         <Field
-          class="{FieldClasses}"
+          class="mx-[2rem] outline-none rounded"
           type="text"
           name="labels"
           placeholder="label1, label2, label3..."
           v-model="vacancyInfo.labels"
         />
+        <ErrorMessage class="text-red-600" name="labels" />
       </label>
       <label class="{labelClasses}" htmlFor="description">
         <span class="text-[2rem] text-[#008080]"> Description: </span>
         <Field
-          class="outline-none rounded"
+          class="outline-none rounded mx-[2rem]"
           name="description"
           rows="{15}"
           cols="{100}"
           v-model="vacancyInfo.description"
-        ></Field>
+        />
+        <ErrorMessage class="text-red-600" name="description" />
       </label>
-
-      <RouterLink to="/">
-        <button
-          type="submit"
-          class="bg-[#2E8B57] hover:bg-[#20B2AA] text-white font-bold py-2 px-4 rounded"
-        >
-          Send Vacancy
-        </button>
-      </RouterLink>
+      <button
+        type="submit"
+        class="bg-[#2E8B57] w-[9rem] hover:bg-[#20B2AA] text-white font-bold py-2 px-4 rounded"
+      >
+        Send Vacancy
+      </button>
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
-import { Field, useForm } from "vee-validate";
+import { Field, useForm, ErrorMessage } from "vee-validate";
 import { object, string } from "yup";
 import { toTypedSchema } from "@vee-validate/yup";
 import { isExist } from "../Helpers/isExist";
@@ -104,7 +110,7 @@ const router = useRouter();
 
 const route = useRoute();
 
-const vacancyId: string | undefined = route.params.id;
+const vacancyId = route.params.id;
 
 const defaultvacancyData = {
   id: uuidv4(),
@@ -119,16 +125,25 @@ const defaultvacancyData = {
   description: "",
 };
 
-const vacancyInfo = vacancyId
-  ? store.findVacancyById(vacancyId)
+const vacancyInfo_ = isExist(vacancyId)
+  ? store.findVacancyById(vacancyId as string)
   : defaultvacancyData;
 
-console.log(vacancyInfo);
+const separator = ", ";
 
-const { values, handleSubmit } = useForm({
+const vacancyInfo = {
+  ...vacancyInfo_,
+  ...{
+    tags: vacancyInfo_.tags.join(separator),
+    labels: vacancyInfo_.labels.join(separator),
+  },
+};
+
+const { handleSubmit } = useForm({
   validationSchema: toTypedSchema(
     object({
       companyName: string().required(),
+      employmentType: string().required(),
       vacancyName: string().required(),
       name: string(),
       location: string().required(),
@@ -138,11 +153,21 @@ const { values, handleSubmit } = useForm({
     })
   ),
 });
-console.log(values);
 
 const onSubmit = handleSubmit((values) => {
-  console.log(JSON.stringify(values, null, 2));
-});
+  console.log(values);
 
-console.log(onSubmit);
+  const data = {
+    ...vacancyInfo,
+    ...{
+      tags: vacancyInfo.tags.split(separator),
+      labels: vacancyInfo.labels.split(separator),
+    },
+  };
+
+  if (isExist(vacancyId)) {
+    store.updateVacancy(data);
+  } else store.addNewVacancy(data);
+  router.push("/");
+});
 </script>

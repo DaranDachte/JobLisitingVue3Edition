@@ -187,9 +187,24 @@ export const useVacansiesStore = defineStore("vacanies", () => {
   const findVacancyById = (id: string) => {
     return vacancies.value.filter((el) => el.id === id)[0];
   };
+  const getRandomLogo = () => {
+    const logoArray: string[] = [
+      photosnap,
+      manage,
+      eyecam,
+      account,
+      faceit,
+      insure,
+      loop,
+      myHome,
+      shortly,
+      airFilter,
+    ];
+    return logoArray[Math.floor(Math.random() * logoArray.length)];
+  };
 
   const addNewVacancy = (vacancy: Vacancy) => {
-    vacancies.value.push(vacancy);
+    vacancies.value.push({ ...vacancy, logo: getRandomLogo() });
   };
 
   const updateVacancy = (vacancy: Vacancy) => {

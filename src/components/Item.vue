@@ -55,7 +55,7 @@
       </div>
     </div>
     <div class="flex items-center justify-end w-1/2">
-      <div class="h-[2rem]">
+      <div class="h-[2rem] flex items-center">
         <span
           v-for="tag in vacancy.tags"
           class="hover:text-[#FFF] rounded bg-[#eef7f6] text-[#5CA5A5] p-1 mx-1 hover:bg-[#5CA5A5] tracking-[-0.00769rem] hover:cursor-pointer"
@@ -65,15 +65,15 @@
       </div>
     </div>
     <div className="flex items-center justify-end pl-10">
-      <div className="h-[2rem] flex w-[5rem]">
+      <div className="h-[2rem] flex w-[5rem] items-center">
         <RouterLink
           :to="`/details/${vacancy.id}/edit`"
-          className="bg-[#2E8B57] hover:bg-[#20B2AA] text-white font-normal p-2 mx-1 rounded tracking-[-0.00769rem]  hover:cursor-pointer"
+          className="bg-[#2E8B57] hover:bg-[#20B2AA] text-white font-normal p-1  mx-1 rounded tracking-[-0.00769rem]  hover:cursor-pointer"
         >
           Edit
         </RouterLink>
         <span
-          class="bg-[#2E8B57] hover:bg-[#20B2AA] text-white font-normal p-2 mx-1 rounded tracking-[-0.00769rem] hover:cursor-pointer"
+          class="bg-[#2E8B57] hover:bg-[#20B2AA] text-white font-normal p-1 mx-1 rounded tracking-[-0.00769rem] hover:cursor-pointer"
           @click="store.deleteVacancy(vacancy.id)"
         >
           Delete
